@@ -1,28 +1,46 @@
+<!-- templates/index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dynamic Table</title>
+    <title>Stock Candlestick Chart</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    <h1>Stock Candlestick Chart</h1>
+    
+    <!-- Render the Plotly chart -->
+    <div id="chart-container">
+        {{ candlestick_chart | safe }}
+    </div>
 
-    <h1>Dynamic Table</h1>
-
-    <table border="1">
-        <tr>
-            <th>Name</th>
-            <th>Age</th>
-        </tr>
-        {% for item in data %}
-            <tr>
-                <td>{{ item[0] }}</td>
-                <td>{{ item[1] }}</td>
-            </tr>
-        {% endfor %}
-    </table>
-
+    <div>
+        <table id="lower-table">
+            <tbody>
+                <tr>
+                    <td>Row 1, Column 1</td>
+                    <td>Row 1, Column 2</td>
+                </tr>
+                <tr>
+                    <td>Row 2, Column 1</td>
+                    <td>Row 2, Column 2</td>
+                </tr>
+                <tr>
+                    <td>Row 3, Column 1</td>
+                    <td>Row 3, Column 2</td>
+                </tr>
+                <tr>
+                    <td>Row 4, Column 1</td>
+                    <td>Row 4, Column 2</td>
+                </tr>
+                <tr>
+                    <td>Row 5, Column 1</td>
+                    <td>Row 5, Column 2</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>
