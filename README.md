@@ -1,6 +1,6 @@
 # Chart
 
-A brief description of what your project does.
+No info yet.
 
 ## Installation
 
