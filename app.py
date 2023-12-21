@@ -44,7 +44,7 @@ def generate_candlestick_chart():
 
     # Customize the layout
     fig.update_layout(
-        title=INPUT_TICKER + ' Candlestick Chart',
+        title= f"{INPUT_TICKER} - {Ticker(INPUT_TICKER).info.get('longName', '')}",
         xaxis_title='Date',
         yaxis_title='Price',
         xaxis_rangeslider_visible=False
@@ -89,8 +89,7 @@ def index():
 
     return render_template('index.html', 
         candlestick_chart=generate_candlestick_chart(), 
-        info_table=generate_info_table(), 
-        INPUT_TICKER=INPUT_TICKER
+        info_table=generate_info_table()
         )
 
 

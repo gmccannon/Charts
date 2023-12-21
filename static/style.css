@@ -69,6 +69,10 @@ h1 {
     text-align: left;
 }
 
+#info-table thead{
+    background-color: #f9f9f9;
+}
+
 #info-table tr:nth-child(even) {
     background-color: #f9f9f9;
 }
