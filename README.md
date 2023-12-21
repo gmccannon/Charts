@@ -1,6 +1,6 @@
-# Chart
+# Charts
 
-No info yet.
+Data visuliztion using flask
 
 ## Installation
 
