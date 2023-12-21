@@ -18,18 +18,22 @@ CANDLE_PERIOD = 180
 MARKET_OPEN_DAYS = [day.date().strftime('%Y-%m-%d') for day in NYSE.valid_days(end_date=TODAY, start_date=TODAY - timedelta(days=CANDLE_PERIOD))]
 NUMER_OF_OPEN_DAYS = len(MARKET_OPEN_DAYS)
 
+#sanmple ticker
+INPUT_TICKER = "AAPL"
+
 # Sample stock data
-ticker_info = download("AAPL", period='1y', interval='1d')
+ticker_info = download(INPUT_TICKER, period='1y', interval='1d')
 data = {
     'Date': MARKET_OPEN_DAYS,
-    'Open': [ticker_info['Open'].iloc[i] for i in range(-1, -NUMER_OF_OPEN_DAYS - 1, -1)],
-    'High': [ticker_info['High'].iloc[i] for i in range(-1, -NUMER_OF_OPEN_DAYS - 1, -1)],
-    'Low': [ticker_info['Low'].iloc[i] for i in range(-1, -NUMER_OF_OPEN_DAYS - 1, -1)],
-    'Close': [ticker_info['Close'].iloc[i] for i in range(-1, -NUMER_OF_OPEN_DAYS - 1, -1)],
+    'Open': [ticker_info['Open'].iloc[i] for i in range(-NUMER_OF_OPEN_DAYS, 0, 1)],
+    'High': [ticker_info['High'].iloc[i] for i in range(-NUMER_OF_OPEN_DAYS, 0, 1)],
+    'Low': [ticker_info['Low'].iloc[i] for i in range(-NUMER_OF_OPEN_DAYS, 0, 1)],
+    'Close': [ticker_info['Close'].iloc[i] for i in range(-NUMER_OF_OPEN_DAYS, 0, 1)],
 }
 
 df = pd.DataFrame(data)
 df['Date'] = pd.to_datetime(df['Date'])
+
 
 def generate_candlestick_chart():
     # Create candlestick chart
@@ -41,23 +45,31 @@ def generate_candlestick_chart():
 
     # Customize the layout
     fig.update_layout(
-        title='AAPL Candlestick Chart',
+        title=INPUT_TICKER + ' Candlestick Chart',
         xaxis_title='Date',
         yaxis_title='Price',
         xaxis_rangeslider_visible=False
     )
 
     # Convert the Plotly chart to HTML
-    chart_html = fig.to_html(full_html=False)
+    return fig.to_html(full_html=True)
 
-    return chart_html
+
+def generate_info_table():
+    info_table = [
+        ['Row 1, Column 1', 'Row 1, Column 2'],
+        ['Row 2, Column 1', 'Row 2, Column 2'],
+        ['Row 3, Column 1', 'Row 3, Column 2'],
+        ['Row 4, Column 1', 'Row 4, Column 2'],
+        ['Row 5, Column 1', 'Row 5, Column 2'],
+    ]
+    return info_table
+
 
 @app.route('/')
 def index():
-    # Generate Plotly candlestick chart
-    candlestick_chart = generate_candlestick_chart()
+    return render_template('index.html', candlestick_chart=generate_candlestick_chart(), info_table=generate_info_table(), INPUT_TICKER=INPUT_TICKER)
 
-    return render_template('index.html', candlestick_chart=candlestick_chart)
 
 if __name__ == '__main__':
     app.run(debug=True)
