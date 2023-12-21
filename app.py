@@ -58,8 +58,8 @@ def generate_info_table():
     # Create a Ticker object for the specified stock
     ticker_object = Ticker(INPUT_TICKER)
 
-    market_cap = ticker_object.info.get('marketCap', 'Not available')
-    eps = ticker_object.info.get('trailingEps', 'Not available')
+    foward_eps = ticker_object.info.get('forwardPE', 'Not available')
+    trailing_eps = ticker_object.info.get('trailingEps', 'Not available')
     pe_ratio = ticker_object.info.get('trailingPE', 'Not available')
     beta = ticker_object.info.get('beta', 'Not available')
 
@@ -67,12 +67,18 @@ def generate_info_table():
     price_close = TICKER_INFO['Close'].iloc[-1]
     price_high = TICKER_INFO['High'].iloc[-1]
     price_low = TICKER_INFO['Low'].iloc[-1]
+    
+    sector = ticker_object.info.get('sector', 'Not available')
+    industry = ticker_object.info.get('industry', 'Not available')
+    market_cap = ticker_object.info.get('marketCap', 'Not available')
+    dividend_yield = ticker_object.info.get('dividendYield', 0)
+
 
     info_table = [
-        [f"Today's Open: {price_open:.2f}", f"Market Cap: {market_cap}", '3'],
-        [f"Today's Close: {price_close:.2f}", f"Trailing EPS: {eps}", '3'],
-        [f"Today's High: {price_high:.2f}", f"Trailing PE: {pe_ratio}", '3'],
-        [f"Today's Low: {price_low:.2f}", f"Beta: {beta}", '3'],
+        [f"Today's Open: {price_open:.2f}", f"Trailing EPS: {trailing_eps}", f"Sector: {sector}"],
+        [f"Today's Close: {price_close:.2f}", f"Foward PE: {foward_eps}", f"Industry: {industry}"],
+        [f"Today's High: {price_high:.2f}", f"Trailing PE: {pe_ratio}", f"Market Cap: {market_cap}"],
+        [f"Today's Low: {price_low:.2f}", f"Dvidend Yield: {(100*dividend_yield):.2f}%", f"Beta: {beta}"],
     ]
     return info_table
 
