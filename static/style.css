@@ -1,20 +1,40 @@
-header{
-    background-color: blue;
-}
-
 body {
     margin: 0;
     padding: 0;
     font-family: 'Arial', sans-serif;
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    height: 115vh;
+    width: 100vw;
+}
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 8vh; /* Adjust the height as needed */
+    background-color: #333; /* Header background color */
+    display: flex;
+    align-items: center;
+    color: white;
+    z-index: 1000; /* Ensure the header is above other content */
+}
+
+header form {
+    display: flex;
+    align-items: center;
+}
+
+header input[type="text"] {
+    width: 15vw; /* Adjust the width as needed */
+    font-size: 3vh;
 }
 
 h1 {
     text-align: center;
     color: #333;
-    margin-top: 2vh 0;
+    margin-top: 8vh; /* Adjust the margin-top for content below the fixed header */
     color: white;
 }
 
@@ -22,14 +42,17 @@ h1 {
     flex: 1;
     max-width: 100%;
     text-align: center;
+    margin-top: 8vh; /* Adjust the margin-top to account for the fixed header */
 }
 
 #info-table {
     flex: 1;
     max-width: 100%;
     text-align: center;
-    padding: 20px;
+    padding: 2vw;
     box-sizing: border-box;
+    margin-top: 2vh; /* Adjust the margin-top to account for the fixed header */
+    margin-bottom: 8vh;
 }
 
 #info-table table {
@@ -48,4 +71,13 @@ h1 {
 
 #info-table tr:nth-child(even) {
     background-color: #f9f9f9;
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: .5vh;
+    bottom: 0;
+    width: 100%;
 }

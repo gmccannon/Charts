@@ -9,16 +9,14 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
-<header>
-    <!-- Form with an input box -->
-    <form method="POST" action="/">
-        <label for="input_value">Enter New Value:</label>
-        <input type="text" id="input_value" name="input_value" required>
-        <button type="submit">Update</button>
-    </form>
-</header>
-
 <body>    
+    <header>
+        <!-- Form with an input box -->
+        <form method="POST" action="/">
+            <input type="text" id="input_value" name="input_value" placeholder="Enter a ticker..." required>
+        </form>
+    </header>
+
     <!-- Render the Plotly chart -->
     <div id="chart-container">
         {{ candlestick_chart | safe }}
@@ -45,5 +43,9 @@
             </tbody>
         </table>
     </div>
+
+    <footer>
+        <p>Written by George McCannon 2023</p>
+    </footer>
 </body>
 </html>
