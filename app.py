@@ -1,43 +1,42 @@
-from flask import Flask, render_template
-import plotly.graph_objects as go
-import pandas as pd
-from yfinance import download
+from flask import Flask, render_template, request
+from plotly.graph_objects import Figure, Candlestick
+from pandas import DataFrame, to_datetime
+from yfinance import download, Ticker
 from datetime import datetime, timedelta
-import pandas_market_calendars as mcal
+from pandas_market_calendars import get_calendar
 
 app = Flask(__name__)
 
-# Get today's date
-TODAY = datetime.now().date()
-
-# Get the NYSE calendar
-NYSE = mcal.get_calendar('XNYS')
-
-#get the date information by filtering non open days
-CANDLE_PERIOD = 180
-MARKET_OPEN_DAYS = [day.date().strftime('%Y-%m-%d') for day in NYSE.valid_days(end_date=TODAY, start_date=TODAY - timedelta(days=CANDLE_PERIOD))]
-NUMER_OF_OPEN_DAYS = len(MARKET_OPEN_DAYS)
-
-#sanmple ticker
-INPUT_TICKER = "AAPL"
-
-# Sample stock data
-ticker_info = download(INPUT_TICKER, period='1y', interval='1d')
-data = {
-    'Date': MARKET_OPEN_DAYS,
-    'Open': [ticker_info['Open'].iloc[i] for i in range(-NUMER_OF_OPEN_DAYS, 0, 1)],
-    'High': [ticker_info['High'].iloc[i] for i in range(-NUMER_OF_OPEN_DAYS, 0, 1)],
-    'Low': [ticker_info['Low'].iloc[i] for i in range(-NUMER_OF_OPEN_DAYS, 0, 1)],
-    'Close': [ticker_info['Close'].iloc[i] for i in range(-NUMER_OF_OPEN_DAYS, 0, 1)],
-}
-
-df = pd.DataFrame(data)
-df['Date'] = pd.to_datetime(df['Date'])
-
+#default values
+INPUT_TICKER = "QQQ"
+TICKER_INFO = download(INPUT_TICKER, period='1y', interval='1d')
 
 def generate_candlestick_chart():
+    # Get today's date
+    today = datetime.now().date()
+
+    # Get the nyse calendar
+    nyse = get_calendar('XNYS')
+
+    #get the date information by filtering non open days, half year time frame
+    candle_period = 180
+    market_open_days = [day.date().strftime('%Y-%m-%d') for day in nyse.valid_days(end_date=today, start_date=today - timedelta(days=candle_period))]
+    number_open_days = len(market_open_days)
+
+    # get specific stock price data
+    data = {
+    'Date': market_open_days,
+    'Open': [TICKER_INFO['Open'].iloc[i] for i in range(-number_open_days, 0, 1)],
+    'High': [TICKER_INFO['High'].iloc[i] for i in range(-number_open_days, 0, 1)],
+    'Low': [TICKER_INFO['Low'].iloc[i] for i in range(-number_open_days, 0, 1)],
+    'Close': [TICKER_INFO['Close'].iloc[i] for i in range(-number_open_days, 0, 1)],
+    }
+
+    df = DataFrame(data)
+    df['Date'] = to_datetime(df['Date'])
+
     # Create candlestick chart
-    fig = go.Figure(data=[go.Candlestick(x=df['Date'],
+    fig = Figure(data=[Candlestick(x=df['Date'],
                                           open=df['Open'],
                                           high=df['High'],
                                           low=df['Low'],
@@ -56,19 +55,43 @@ def generate_candlestick_chart():
 
 
 def generate_info_table():
+    # Create a Ticker object for the specified stock
+    ticker_object = Ticker(INPUT_TICKER)
+
+    market_cap = ticker_object.info.get('marketCap', 'Not available')
+    eps = ticker_object.info.get('trailingEps', 'Not available')
+    pe_ratio = ticker_object.info.get('trailingPE', 'Not available')
+    beta = ticker_object.info.get('beta', 'Not available')
+
+    price_open = TICKER_INFO['Open'].iloc[-1]
+    price_close = TICKER_INFO['Close'].iloc[-1]
+    price_high = TICKER_INFO['High'].iloc[-1]
+    price_low = TICKER_INFO['Low'].iloc[-1]
+
     info_table = [
-        ['Row 1, Column 1', 'Row 1, Column 2'],
-        ['Row 2, Column 1', 'Row 2, Column 2'],
-        ['Row 3, Column 1', 'Row 3, Column 2'],
-        ['Row 4, Column 1', 'Row 4, Column 2'],
-        ['Row 5, Column 1', 'Row 5, Column 2'],
+        [f"Today's Open: {price_open:.2f}", f"Market Cap: {market_cap}", '3'],
+        [f"Today's Close: {price_close:.2f}", f"Trailing EPS: {eps}", '3'],
+        [f"Today's High: {price_high:.2f}", f"Trailing PE: {pe_ratio}", '3'],
+        [f"Today's Low: {price_low:.2f}", f"Beta: {beta}", '3'],
     ]
     return info_table
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html', candlestick_chart=generate_candlestick_chart(), info_table=generate_info_table(), INPUT_TICKER=INPUT_TICKER)
+
+    global INPUT_TICKER
+    global TICKER_INFO
+    # Update based on the form submission
+    if request.method == 'POST':
+        INPUT_TICKER = request.form['input_value'].upper()
+        TICKER_INFO = download(INPUT_TICKER, period='1y', interval='1d')
+
+    return render_template('index.html', 
+        candlestick_chart=generate_candlestick_chart(), 
+        info_table=generate_info_table(), 
+        INPUT_TICKER=INPUT_TICKER
+        )
 
 
 if __name__ == '__main__':

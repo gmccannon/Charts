@@ -8,9 +8,17 @@
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<body>
-    <h1>{{ INPUT_TICKER }} Candlestick Chart</h1>
-    
+
+<header>
+    <!-- Form with an input box -->
+    <form method="POST" action="/">
+        <label for="input_value">Enter New Value:</label>
+        <input type="text" id="input_value" name="input_value" required>
+        <button type="submit">Update</button>
+    </form>
+</header>
+
+<body>    
     <!-- Render the Plotly chart -->
     <div id="chart-container">
         {{ candlestick_chart | safe }}
@@ -19,6 +27,13 @@
     <!-- Render the table -->
     <div id="info-table">
         <table>
+            <thead>
+                <tr>
+                    <td>Price Information</td>
+                    <td>Fundamentals</td>
+                    <td>Options Data</td>
+                </tr>
+            </thead>
             <tbody>
                 {% for row in info_table %}
                     <tr>
