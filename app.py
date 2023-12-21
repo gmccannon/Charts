@@ -4,6 +4,7 @@ from pandas import DataFrame, to_datetime
 from yfinance import download, Ticker
 from datetime import datetime, timedelta
 from pandas_market_calendars import get_calendar
+from number_formatting import format_large_number
 
 app = Flask(__name__)
 
@@ -77,7 +78,7 @@ def generate_info_table():
     info_table = [
         [f"Today's Open: {price_open:.2f}", f"Trailing EPS: {trailing_eps}", f"Sector: {sector}"],
         [f"Today's Close: {price_close:.2f}", f"Foward PE: {foward_eps}", f"Industry: {industry}"],
-        [f"Today's High: {price_high:.2f}", f"Trailing PE: {pe_ratio}", f"Market Cap: {market_cap}"],
+        [f"Today's High: {price_high:.2f}", f"Trailing PE: {pe_ratio}", f"Market Cap: {format_large_number(market_cap)}"],
         [f"Today's Low: {price_low:.2f}", f"Dvidend Yield: {(100*dividend_yield):.2f}%", f"Beta: {beta}"],
     ]
     return info_table
