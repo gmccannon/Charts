@@ -8,18 +8,18 @@ import pandas_market_calendars as mcal
 app = Flask(__name__)
 
 # Get today's date
-today = datetime.now().date()
+TODAY = datetime.now().date()
 
 # Get the NYSE calendar
-nyse = mcal.get_calendar('XNYS')
+NYSE = mcal.get_calendar('XNYS')
 
 #get the date information by filtering non open days
-CANDLE_PERIOD = 30
-MARKET_OPEN_DAYS = [day.date().strftime('%Y-%m-%d') for day in nyse.valid_days(end_date=today, start_date=today - timedelta(days=CANDLE_PERIOD))]
+CANDLE_PERIOD = 180
+MARKET_OPEN_DAYS = [day.date().strftime('%Y-%m-%d') for day in NYSE.valid_days(end_date=TODAY, start_date=TODAY - timedelta(days=CANDLE_PERIOD))]
 NUMER_OF_OPEN_DAYS = len(MARKET_OPEN_DAYS)
 
 # Sample stock data
-ticker_info = download("AAPL", period='2mo', interval='1d')
+ticker_info = download("AAPL", period='1y', interval='1d')
 data = {
     'Date': MARKET_OPEN_DAYS,
     'Open': [ticker_info['Open'].iloc[i] for i in range(-1, -NUMER_OF_OPEN_DAYS - 1, -1)],
