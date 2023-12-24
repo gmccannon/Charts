@@ -59,10 +59,10 @@ def generate_info_table():
     # Create a Ticker object for the specified stock
     ticker_object = Ticker(INPUT_TICKER)
 
-    foward_eps = ticker_object.info.get('forwardPE', 'Not available')
-    trailing_eps = ticker_object.info.get('trailingEps', 'Not available')
-    pe_ratio = ticker_object.info.get('trailingPE', 'Not available')
-    beta = ticker_object.info.get('beta', 'Not available')
+    foward_eps = ticker_object.info.get('forwardPE', 0)
+    trailing_eps = ticker_object.info.get('trailingEps', 0)
+    pe_ratio = ticker_object.info.get('trailingPE', 0)
+    beta = ticker_object.info.get('beta', 0)
 
     price_open = TICKER_INFO['Open'].iloc[-1]
     price_close = TICKER_INFO['Close'].iloc[-1]
@@ -71,7 +71,7 @@ def generate_info_table():
     
     sector = ticker_object.info.get('sector', 'Not available')
     industry = ticker_object.info.get('industry', 'Not available')
-    market_cap = ticker_object.info.get('marketCap', 'Not available')
+    market_cap = ticker_object.info.get('marketCap', 0)
     dividend_yield = ticker_object.info.get('dividendYield', 0)
 
 
