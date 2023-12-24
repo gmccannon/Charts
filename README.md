@@ -6,7 +6,7 @@ Data visuliztion using flask
 
 1. Clone the repository
 2. Create a python virtual environment. (Optional but highly recommended)
-   - `python3 -m venv .venv`
+   - `python -m venv .venv`
    - `source .venv/bin/activate`
 3. Install dependencies: `pip install -r requirements.txt`
 
